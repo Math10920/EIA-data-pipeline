@@ -1,39 +1,54 @@
-import os
-from dotenv import load_dotenv
 import requests
+import os
+import json
+from dotenv import load_dotenv
+
 
 load_dotenv()
 
-# Ajustado para o nome padrão da chave no seu .env
 API_KEY = os.getenv("EIA_API")
 
-# URL correta da API v2 (sem 'browser' e terminando com '/data/')
-url = "https://api.eia.gov/v2/electricity/retail-sales/data/"
+def api_conf(api_key):
 
-params = {"api_key": API_KEY, 
-          "frequency": "monthly", 
-          "offset": 0, 
-          "length": 5000
-          }
+    if api_key is not None:
 
-print("Enviando requisição para a EIA...")
-response = requests.get(url, params=params)
+        url = "https://api.eia.gov/v2/electricity/retail-sales/data/"
 
-# Verifica se a requisição foi bem-sucedida (Status 200)
-if response.status_code == 200:
-  print("Status:", response.status_code)
-  print("Tipo da resposta:", type(response))
+        params = {
+            "api_key": api_key,
+            "frequency": "monthly",
+            "offset": 0,
+            "length": 5000,
+        }
 
-  try:
-    dados_json = response.json()
+        print(f"usuário permitido!")
+        return url, params
+
+    return print(f"Error: {None}")
     
-    registros = dados_json.get("response", {}).get("data", [])
-    print(f"Total de registros obtidos nesta página: {len(registros)}")
+def request_api(url, params):
 
-  except requests.exceptions.JSONDecodeError:
-    print("Erro: A resposta não veio em formato JSON válido.")
-    print("Conteúdo recebido:", response.text[:500])
+    response = requests.get(url, params=params)
 
-else:
-  print(f"Erro na requisição! Status Code: {response.status_code}")
-  print("Detalhes do erro:", response.text)
+    if response.status_code == 200:
+        data_dict = response.json()
+        print(f"Tipo de dados: {type(data_dict)}")
+
+        try:
+            data = data_dict.get("response", {}).get("data", {})
+            data_json = json.dumps(data, indent=4, ensure_ascii=False)
+            print(data_json)
+            return data
+
+        except requests.exceptions.JSONDecodeError as e:
+            return print(f"Error message: {e}")
+
+    else:
+        return print(f"Status_code: {response.status_code} \
+            \n Descrição do erro: {response.text}")
+
+url, params = api_conf(API_KEY)
+
+df = request_api(url, params)
+
+print(df)

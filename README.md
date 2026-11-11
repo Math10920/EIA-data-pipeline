@@ -29,7 +29,7 @@ Projetar e implementar uma plataforma de Engenharia de Dados End-to-End híbrida
 
 5. Orquestração e Integração Contínua (Operations & CI/CD):
     * Orquestrar o fluxo ponta a ponta (Bronze $\rightarrow$ Silver $\rightarrow$ Gold) utilizando Databricks Workflows.Configurar um pipeline de CI/CD via GitHub Actions para automatizar a validação de código, testes e o deploy contínuo para o ambiente de produção.
-    
+
 ---
 ## Quais dados foram escolhidos para este projeto?
 
@@ -66,7 +66,7 @@ Projetar e implementar uma plataforma de Engenharia de Dados End-to-End híbrida
 * ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
 * ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
 
-**Armazenamento e Processamento de Big Data**
+**Armazenamento e Processamento de Big Data:**
 * ![Databricks](https://img.shields.io/badge/Databricks-FF3621?style=for-the-badge&logo=databricks&logoColor=white)
 * ![Delta Lake](https://img.shields.io/badge/Delta_Lake-FF3621?style=for-the-badge&logo=deltalake&logoColor=white)
 
