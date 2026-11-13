@@ -1,6 +1,5 @@
 import os
 from dotenv import load_dotenv
-import pandas as pd
 import requests
 import json
 
@@ -8,33 +7,46 @@ load_dotenv()
 
 API_KEY = os.getenv("EIA_API")
 
-url = "https://api.eia.gov/v2/electricity/operating-generator-capacity/data/"
+def params_user(api_key):
 
-params = {
-  "api_key": API_KEY,
-  "frequency": "monthly", 
-  "offset": 0,
-  "length": 5000}
+    url = "https://api.eia.gov/v2/electricity/operating-generator-capacity/data/"
 
-response = requests.get(url, params=params)
+    params = {
+      "api_key": api_key,
+      "frequency": "monthly", 
+      "offset": 0,
+      "length": 5000}
 
-if response.status_code == 200:
-  dados = response.json()
-  print(f"{response.status}")
+    if url and params is not None:
+      return url , params
 
-  try:
+    return None
 
-    if isinstance(dados, dict) and dados["response"] is not None:
-      lista_registro = dados.get("response", {}).get("data", [])
-      print(json.dumps(lista_registro, indent=4, ensure_ascii=False))
+
+def dataframe(url, params):
+
+    response = requests.get(url, params=params)
+
+    if response.status_code == 200:
+      dados = response.json()
+      print(f"{response.status_code}")
+
+      try:
+
+        if isinstance(dados, dict) and dados["response"] is not None:
+          lista_registro = dados.get("response", {}).get("data", [])
+          print(json.dumps(lista_registro, indent=4, ensure_ascii=False))
+
+        else:
+          print(f"Dados não representa um ducionário: {type(dados)} \
+                ou valor {None}")
+
+      except Exception as e:
+        print(f"Erro! {e}")
 
     else:
-      print(f"Dados não representa um ducionário: {type(dados)} \
-            ou valor {None}")
+      print(f"Erro! {response.status_code}")
 
-  except Exception as e:
-    print(f"Erro! {e}")
 
-else:
-  print(f"Erro! {response.status_code}")
-
+url, params = params_user(API_KEY) 
+df = dataframe(url, params)
