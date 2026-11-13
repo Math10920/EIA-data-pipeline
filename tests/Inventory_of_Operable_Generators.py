@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+import pandas as pd
 import requests
 import json
 
@@ -34,8 +35,10 @@ def dataframe(url, params):
       try:
 
         if isinstance(dados, dict) and dados["response"] is not None:
-          lista_registro = dados.get("response", {}).get("data", [])
-          print(json.dumps(lista_registro, indent=4, ensure_ascii=False))
+          data = dados.get("response", {}).get("data", [])
+          print(json.dumps(data, indent=4, ensure_ascii=False))
+
+          return data
 
         else:
           print(f"Dados não representa um ducionário: {type(dados)} \
@@ -48,5 +51,24 @@ def dataframe(url, params):
       print(f"Erro! {response.status_code}")
 
 
-url, params = params_user(API_KEY) 
-df = dataframe(url, params)
+
+def df_pandas():
+    
+    url, params = params_user(API_KEY)
+
+    if url and params is not None:
+      data = dataframe(url, params)
+
+      if data: 
+
+        df_final = pd.DataFrame(data).reset_index()
+        return df_final
+
+      return print(f"Não há dados disponíveis no Dataframe!")
+
+    return print(f"Não há url e/ou parametros definidos!")
+
+
+df_final = df_pandas()
+
+print(df_final)

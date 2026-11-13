@@ -49,6 +49,5 @@ def request_api(url, params):
 
 url, params = api_conf(API_KEY)
 
-df = request_api(url, params)
+data = request_api(url, params)
 
-print(df)
