@@ -90,3 +90,43 @@ https://api.eia.gov/v2/electricity/rto/region-data/data/
 1. **Configuração VENV no VS CODE pela SO do Ubuntu(WSL):**
 2. **Versionamento no Github:**
 3. **d**
+
+
+## Processo 
+
+1. Diretórios e arquivos
+
+mkdir -p config data src tests venv
+touch .env .gitignore README.md requirements.txt
+
+2. Isolamento no .gitignore
+
+    * echo .env > .gitignore
+    * echo venv > .gitignore
+    * echo data > .gitignore
+
+3. Ambiente Virtual
+
+    * source venv/bin/activate
+
+4. Recursos e Ferramentas Installadas
+
+    * pip install requests
+    * pip install python-dotenv
+    * pip install pandas
+    * pip install apache-airflow
+    * pip install pyarrow ## Para o interpretador ler o salvamento de parquet
+
+
+5. Criando repositório (Github) e iniciando versionamento do projeto (Git)
+
+    * git init
+    * git add .
+    * git commit - "first commit"
+    * git branch -m main
+    * git origin https://github.com/Math10920/EIA-data-pipeline.git
+    * git push
+
+6. Salvando instalações de pacotes e ferramentas
+
+    * pip freeze > requirements.txt
