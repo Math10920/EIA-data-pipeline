@@ -8,6 +8,7 @@ load_dotenv()
 
 API_KEY = os.getenv("EIA_API")
 
+
 def params_user(api_key):
 
     url = "https://api.eia.gov/v2/electricity/operating-generator-capacity/data/"
@@ -19,12 +20,12 @@ def params_user(api_key):
       "length": 5000}
 
     if url and params is not None:
-      return url , params
+      return url, params
 
     return None
 
 
-def dataframe(url, params):
+def dados(url, params):
 
     response = requests.get(url, params=params)
 
@@ -37,38 +38,37 @@ def dataframe(url, params):
         if isinstance(dados, dict) and dados["response"] is not None:
           data = dados.get("response", {}).get("data", [])
           print(json.dumps(data, indent=4, ensure_ascii=False))
-
           return data
-
+        
         else:
           print(f"Dados não representa um ducionário: {type(dados)} \
                 ou valor {None}")
-
       except Exception as e:
         print(f"Erro! {e}")
-
     else:
       print(f"Erro! {response.status_code}")
 
+    return []
 
 
-def df_pandas():
-    
-    url, params = params_user(API_KEY)
 
-    if url and params is not None:
-      data = dataframe(url, params)
+def raw_operating_generator_capacity(data, nome_base="Operable_Generators"):
 
-      if data: 
+  if not data:
+    print(f"Nenhum dado coletado!")
+    return None
 
-        df_final = pd.DataFrame(data).reset_index()
-        return df_final
+  df_raw = pd.DataFrame(data)
 
-      return print(f"Não há dados disponíveis no Dataframe!")
+  os.makedirs("data", exist_ok=True)
 
-    return print(f"Não há url e/ou parametros definidos!")
+  csv_way = os.path.join("data", f"{nome_base}.csv")
+  parquet_way = os.path.join("data", f"{nome_base}.parquet")
+
+  df_raw.to_csv(csv_way, index=False, encoding="utf-8")
+  df_raw.to_parquet(parquet_way, index=False)
 
 
-df_final = df_pandas()
-
-print(df_final)
+url, params = params_user(API_KEY)
+data = dados(url, params)
+raw_data = raw_operating_generator_capacity(data, "Raw_Inventory_of_Operable_Generators")
